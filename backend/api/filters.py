@@ -3,6 +3,7 @@ from recipes.models import Recipe, Tag
 
 from rest_framework.filters import SearchFilter
 
+
 class IngredientsFilter(SearchFilter):
     """Кастомная настройка фильтра для Ингридиентов."""
     search_param = 'name'
