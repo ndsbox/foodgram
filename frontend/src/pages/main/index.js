@@ -20,6 +20,7 @@ const HomePage = ({ updateOrders }) => {
     handleAddToCart
   } = useRecipes()
 
+
   const getRecipes = ({ page = 1, tags }) => {
     api
       .getRecipes({ page, tags })
@@ -46,7 +47,7 @@ const HomePage = ({ updateOrders }) => {
     <Container>
       <MetaTags>
         <title>Рецепты</title>
-        <meta name="description" content="Фудграм - Рецепты" />
+        <meta name="description" content="Продуктовый помощник - Рецепты" />
         <meta property="og:title" content="Рецепты" />
       </MetaTags>
       <div className={styles.title}>
@@ -59,7 +60,7 @@ const HomePage = ({ updateOrders }) => {
           }}
         />
       </div>
-      {recipes.length > 0 && <CardList>
+      <CardList>
         {recipes.map(card => <Card
           {...card}
           key={card.id}
@@ -67,7 +68,7 @@ const HomePage = ({ updateOrders }) => {
           handleLike={handleLike}
           handleAddToCart={handleAddToCart}
         />)}
-      </CardList>}
+      </CardList>
       <Pagination
         count={recipesCount}
         limit={6}

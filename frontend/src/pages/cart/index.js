@@ -37,7 +37,7 @@ const Cart = ({ updateOrders, orders }) => {
     <Container className={styles.container}>
       <MetaTags>
         <title>Список покупок</title>
-        <meta name="description" content="Фудграм - Список покупок" />
+        <meta name="description" content="Продуктовый помощник - Список покупок" />
         <meta property="og:title" content="Список покупок" />
       </MetaTags>
       <div className={styles.cart}>
@@ -48,7 +48,7 @@ const Cart = ({ updateOrders, orders }) => {
           updateOrders={updateOrders}
         />
         {orders > 0 && <Button
-          modifier='style_dark'
+          modifier='style_dark-blue'
           clickHandler={downloadDocument}
         >Скачать список</Button>}
       </div>

@@ -15,12 +15,20 @@ const Checkbox = ({
   const clickHandler = () => {
     onChange && onChange(id)
   }
-  const classNames = cn(styles['checkbox-container'], className, {
+  const classNames = cn(styles.checkbox, className, {
     [styles['checkbox_active']]: value
   })
 
-  return <div className={classNames} onClick={clickHandler}>
-    {name}
+  return <div className={styles['checkbox-container']}>
+    <button
+      className={classNames}
+      onClick={clickHandler}
+      style={{ backgroundColor: value && color }}
+      type='button'
+    >
+      {value ? <Icons.CheckIcon /> : ''}
+    </button>
+    <span>{name}</span>
   </div>
 }
 

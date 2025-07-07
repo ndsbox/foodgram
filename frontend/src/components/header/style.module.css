@@ -2,23 +2,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100px;
+  margin-bottom: 30px;
 }
 
 .headerContent {
-  display: grid;
+  display: flex;
   align-items: center;
-  grid-template-columns: 1fr 2fr;
-}
-
-.headerLogo {
-  max-width: 154px;
-  position: relative;
-  bottom: 12px;
-}
-
-.headerLink {
-  text-align: left;
-  width: fit-content;
-  user-select: none;
+  justify-content: space-between;
 }

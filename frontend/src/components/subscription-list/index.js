@@ -1,4 +1,5 @@
 import styles from './styles.module.css'
+import cn from 'classnames'
 import { Subscription } from '../index'
 
 const SubscriptionList = ({ subscriptions, removeSubscription }) => {
