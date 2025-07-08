@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
-        
+
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -126,5 +126,5 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: Деплой Foodgram успешно выполнен! Ссылка на коммит - https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+        message: Деплой проекта Foodgram успешно выполнен! Ссылка на коммит - https://github.com/${{ github.repository }}/commit/${{ github.sha }}
        
