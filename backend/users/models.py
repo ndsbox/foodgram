@@ -1,35 +1,82 @@
-from api.constants import (AVATAR_UPLOAD_DIR, EMAIL_MAX_LENGTH,
-                           NAME_MAX_LENGTH, USERNAME_MAX_LENGTH)
-from django.contrib.auth.models import AbstractUser, UnicodeUsernameValidator
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
-from .validators import validate_username
+from foodgram.constants import NAME_MAX_LENGTH
 
 
 class User(AbstractUser):
     """Модель пользователя."""
-    username = models.CharField(
-        max_length=USERNAME_MAX_LENGTH, unique=True, blank=False,
-        validators=((UnicodeUsernameValidator(), validate_username)))
-    email = models.EmailField(
-        max_length=EMAIL_MAX_LENGTH, unique=True, blank=False,
-        verbose_name='email')
-    first_name = models.CharField(
-        max_length=NAME_MAX_LENGTH, blank=False, verbose_name='Имя')
-    last_name = models.CharField(
-        max_length=NAME_MAX_LENGTH, blank=False, verbose_name='Фамилия')
-    avatar = models.ImageField(
-        upload_to=AVATAR_UPLOAD_DIR, blank=True, verbose_name='Аватар',
-        default='')
-
+    REQUIRED_FIELDS = [
+        'username',
+        'first_name',
+        'last_name',
+    ]
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
-    def get_number_of_recipes(self):
-        return self.recipes.count()
+    username = models.CharField(
+        unique=True,
+        max_length=NAME_MAX_LENGTH,
+        validators=[UnicodeUsernameValidator(), ],
+        verbose_name='Никнейм пользователя',
+        help_text='Укажите никнейм пользователя'
+    )
+    first_name = models.CharField(
+        max_length=NAME_MAX_LENGTH,
+        verbose_name='Имя пользователя',
+        help_text='Укажите имя пользователя'
+    )
+    last_name = models.CharField(
+        max_length=NAME_MAX_LENGTH,
+        verbose_name='Фамилия пользователя',
+        help_text='Укажите фамилию пользователя'
+    )
+    email = models.EmailField(
+        unique=True,
+        verbose_name='E-mail пользователя',
+        help_text='Укажите e-mail пользователя'
+    )
 
-    def get_number_of_subscribers(self):
-        return self.subscribed_to.count()
+    class Meta:
+        ordering = ('username',)
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 
     def __str__(self):
         return self.username
+
+
+class Subscribers(models.Model):
+    """Модель подписок на автора рецепта."""
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='authors',
+        verbose_name='Автор рецептов',
+        help_text='Укажите автора рецепта'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='subscribers',
+        verbose_name='Пользователь-подписчик',
+        help_text='Укажите пользователя-подписчика'
+    )
+
+    class Meta:
+        ordering = ('author',)
+        verbose_name = 'Автор - подписчик'
+        verbose_name_plural = verbose_name
+        constraints = [
+            models.UniqueConstraint(
+                fields=['author', 'user'],
+                name='unique_author_user'
+            ),
+            models.CheckConstraint(
+                check=~models.Q(author=models.F('user')),
+                name='author_and_user_different',
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.author} - {self.user}"

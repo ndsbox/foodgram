@@ -1,57 +1,102 @@
 from django.contrib import admin
-from django.contrib.admin import ModelAdmin, register
+from django.contrib.auth.admin import UserAdmin
+from import_export.admin import ImportExportActionModelAdmin
 
-from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                     ShoppingCart, Subscription, Tag)
-
-
-@register(Favorite)
-class FavoriteAdmin(ModelAdmin):
-    list_display = ('user', 'recipe')
-    search_fields = ('user__username', 'recipe__name')
+from users.models import Subscribers, User
+from .models import Ingredient, Recipe, RecipeIngredient, RecipeTag, Tag
 
 
-@register(Ingredient)
-class IngredientAdmin(ModelAdmin):
-    list_display = ('name', 'measurement_unit')
-    search_fields = ('name',)
-
-
-@register(IngredientRecipe)
-class IngredientRecipeAdmin(ModelAdmin):
-    list_display = ('recipe', 'ingredient', 'amount')
-    search_fields = ('recipe__name', 'ingredient__name')
-
-
-class IngredientInline(admin.StackedInline):
-    model = IngredientRecipe
+class SubscribersInline(admin.TabularInline):
+    """Настройка отображения подписчиков на автора рецептов и наоборот."""
+    model = Subscribers
     min_num = 1
 
 
-@register(Recipe)
-class RecipeAdmin(ModelAdmin):
-    list_display = ('name', 'text', 'cooking_time', 'favorites')
-    search_fields = ('name', 'tags__name')
-    inlines = (IngredientInline,)
+class UserAdmin(UserAdmin):
+    """Настройка Админки-Пользователей."""
 
-    @admin.display(description='Число добавлений в избранное')
-    def favorites(self, obj):
-        return obj.favorite.count()
+    @admin.display(description='Подписчики')
+    def get_subscribers(self, obj):
+        """Функция для корректного отображения подписчиков в
+           list_display Админке-Пользователей."""
+        subscribers = Subscribers.objects.filter(author_id=obj.id)
+        return [i.user for i in subscribers]
+
+    list_display = (
+        'id',
+        'username',
+        'first_name',
+        'last_name',
+        'email',
+        'get_subscribers',
+    )
+    list_filter = ('username',)
+    search_fields = ('username',)
+    ordering = ('username',)
 
 
-@register(ShoppingCart)
-class ShoppingCartAdmin(ModelAdmin):
-    list_display = ('user', 'recipe')
-    search_fields = ('user__username', 'recipe__name')
+class IngredientAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    """Настройка Админки-Ингридиентов + добавление возможности импорта/экспорта
+    данных из CSV-файлов в БД из Админки."""
+    list_display = (
+        'id',
+        'name',
+        'measurement_unit',
+    )
+    list_filter = ('name',)
+    search_fields = ('name',)
+    ordering = ('name',)
 
 
-@register(Tag)
-class TagAdmin(ModelAdmin):
-    list_display = ('name', 'slug')
-    search_fields = ('name', 'slug')
+class RecipeTagInline(admin.TabularInline):
+    """Настройка отображения тегов в рецепте."""
+    model = RecipeTag
+    min_num = 1
 
 
-@register(Subscription)
-class SubscriptionAdmin(ModelAdmin):
-    list_display = ('user', 'subscribed_to')
-    search_fields = ('user__username', 'subscribed_to__username')
+class RecipeIngredientInline(admin.TabularInline):
+    """Настройка отображения ингридиентов в рецепте."""
+    model = RecipeIngredient
+    min_num = 1
+
+
+class RecipeAdmin(admin.ModelAdmin):
+    """Настройка Админки-Рецептов."""
+
+    @admin.display(description='Теги')
+    def get_tags(self, obj):
+        """Функция для корректного отображения тегов в list_display
+           Админке-Рецептов."""
+        return (
+            ', '.join([tag.name for tag in obj.tags.all()])
+        )
+
+    @admin.display(description='Ингредиенты')
+    def get_ingredients(self, obj):
+        """Функция для корректного отображения ингредиентов в list_display
+           Админке-Рецептов."""
+        ingredients = obj.recipeingredients.all()
+        return (
+            ', '.join(
+                [f'{ingredient.ingredients} - {ingredient.amount} '
+                 f'{ingredient.ingredients.measurement_unit}'
+                 for ingredient in ingredients])
+        )
+
+    inlines = (RecipeIngredientInline, RecipeTagInline)
+    list_display = (
+        'id',
+        'name',
+        'author',
+        'get_tags',
+        'get_ingredients',
+    )
+    search_fields = ('name',)
+    list_filter = ('name',)
+    empty_value_display = 'Не задано'
+
+
+admin.site.register(User, UserAdmin)
+admin.site.register(Tag)
+admin.site.register(Ingredient, IngredientAdmin)
+admin.site.register(Recipe, RecipeAdmin)
