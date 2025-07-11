@@ -2,41 +2,71 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 80px;
+  margin-top: 52px;
 }
 
 .paginationItem {
-  width: 46px;
-  height: 46px;
-  border-radius: 46px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #000;
-  font-size: 20px;
+  color: #a0a0a0;
+  font-size: 32px;
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+.paginationItem:last-child {
+  margin-right: 0px;
 }
 
 .paginationItemActive {
-  color: #FFF;
-  background-color: #4A61DD;
+  color: #000000;
   cursor: default;
 }
 
 .arrow {
   cursor: pointer;
-  max-width: 16px;
+  min-width: 44px;
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  background: #000;
+  justify-content: center;
+  max-width: 44px;
+  border-radius: 44px;
 }
 
 .arrowLeft {
-  margin-right: 21px;
+  margin-right: 24px;
+}
+
+.arrowRight svg {
+  transform: rotate(180deg);
+  transform-origin: center center;
 }
 
 .arrowRight {
-  margin-left: 21px;
+  margin-left: 24px;
+}
+
+.arrowRight svg {
+  transform: rotate(180deg);
+  transform-origin: center center;
 }
 
 .arrowDisabled {
-  opacity: .3;
   cursor: not-allowed;
+  background: #efefef;
+}
+
+.arrowDisabled path {
+  stroke: #a0a0a0;
+}
+
+@media screen and (max-width: 660px) {
+  .paginationItem {
+    font-size: 23px;
+  }
 }

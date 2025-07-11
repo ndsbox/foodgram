@@ -12,6 +12,7 @@ import Form from './form'
 import ProtectedRoute from './protected-route'
 import Input from './input'
 import AccountMenu from './account-menu'
+import AccountMenuMobile from './account-menu-mobile'
 import Nav from './nav'
 import Tag from './tag'
 import TagsContainer from './tags-container'
@@ -25,9 +26,21 @@ import Subscription from './subscription'
 import SubscriptionList from './subscription-list'
 import FileInput from './file-input'
 import IngredientsSearch from './ingredients-search'
+import FormTitle from './form-title'
+import Account from './account'
+import AccountMobile from './account-mobile'
+import Orders from './orders'
+import NavMenu from './nav-menu'
+import Popup from './popup'
 
 export {
+  Popup,
   Header,
+  AccountMenuMobile,
+  AccountMobile,
+  FormTitle,
+  NavMenu,
+  Orders,
   Footer,
   LinkComponent,
   Container,
@@ -35,6 +48,7 @@ export {
   Card,
   Icons,
   Button,
+  Account,
   CardList,
   Title,
   Form,

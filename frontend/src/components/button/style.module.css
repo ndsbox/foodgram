@@ -1,18 +1,18 @@
 .button {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "SF Pro Display", sans-serif;
   font-style: normal;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 18px;
   background: none;
-  border-radius: 6px;
+  border-radius: 10px;
   padding: 0px 24px;
-  height: 48px;
-  line-height: 48px;
+  height: 44px;
   text-decoration: none;
-  border: 1px solid transparent;
+  border: 1.4px solid transparent;
   transition: background 0.2s;
   outline: none;
   user-select: none;
+  line-height: 44px;
   cursor: pointer;
   width: max-content;
   box-sizing: border-box;
@@ -23,39 +23,31 @@
 }
 
 .button_style_light {
-  border: 1px solid #DEE2F2;
-  background: #FFF;
-  color: #4A61DD;
+  border: 1.4px solid #000;
+  background: #fff;
+  color: #000;
 }
 
 .button_style_light:hover {
-  background: #D8DEFF;
-  color: #4A61DD;
-  border: 1px solid transparent;
+  background: #000;
+  color: #fff;
+  border: 1.4px solid transparent;
 }
 
-.button_style_light-blue {
-  background: #F0F3FF;
-  color: #4A61DD;
+.button_style_dark {
+  background: #000;
+  color: #fff;
 }
 
-.button_style_light-blue:hover {
-  background: #D8DEFF;
-  color: #4A61DD;
-}
-
-.button_style_dark-blue {
-  background: #4A61DD;
-  color: #FFF;
+.button_style_dark:hover {
+  background: #fff;
+  color: #000;
+  border: 1.4px solid #000;
 }
 
 .button_disabled {
-  opacity: .6;
+  opacity: 0.6;
   cursor: not-allowed;
-}
-
-.button_style_dark-blue:hover {
-  background: #2845DF;
 }
 
 .button_style_none {
@@ -66,12 +58,10 @@
   box-shadow: none;
 }
 
-
-@media screen and (max-width: 940px) {
+@media screen and (max-width: 730px) {
   .button {
-    font-size: 12px!important;
-    padding: 0px 12px;
-    height: 32px;
-    line-height: 30px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
   }
 }

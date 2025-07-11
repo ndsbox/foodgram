@@ -46,7 +46,7 @@ const Favorites = ({ updateOrders }) => {
     <Container>
       <MetaTags>
         <title>Избранное</title>
-        <meta name="description" content="Продуктовый помощник - Избранное" />
+        <meta name="description" content="Фудграм - Избранное" />
         <meta property="og:title" content="Избранное" />
       </MetaTags>
       <div className={styles.title}>
@@ -59,7 +59,7 @@ const Favorites = ({ updateOrders }) => {
           }}
         />
       </div>
-      <CardList>
+      {recipes.length > 0 && <CardList>
         {recipes.map(card => <Card
           {...card}
           key={card.id}
@@ -67,7 +67,7 @@ const Favorites = ({ updateOrders }) => {
           handleLike={handleLike}
           handleAddToCart={handleAddToCart}
         />)}
-      </CardList>
+      </CardList>}
       <Pagination
         count={recipesCount}
         limit={6}

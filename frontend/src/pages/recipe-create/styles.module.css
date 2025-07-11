@@ -1,5 +1,10 @@
 .form {
-  margin: 0 auto 50px;
+  display: flex;
+  flex-direction: column;
+  max-width: 744px;
+  padding: 0;
+  border: none;
+  box-shadow: none;
 }
 
 .ingredientsInputs {
@@ -9,15 +14,17 @@
 }
 
 .ingredientsInput {
-  width: 230px;
+  width: 100%;
+  max-width: 395px;
 }
 
 .ingredientsAmountInputContainer {
   display: flex;
+  gap: 8px;
 }
 
-.ingredientsLabel {
-  min-width: 230px;
+.ingredientsAmountInputContainerMob {
+  display: none;
 }
 
 .measurementUnit {
@@ -31,11 +38,7 @@
 
 .cookingTimeUnit {
   align-self: center;
-  margin-bottom: 35px;
-}
-
-.cookingTimeLabel {
-  min-width: 230px;
+  margin-bottom: 20px;
 }
 
 .ingredientsAmountValue {
@@ -44,6 +47,19 @@
 
 .ingredientsTimeInput {
   margin-right: 10px;
+}
+
+.ingredientsTimeValue {
+  max-width: 46px;
+}
+
+.amountText {
+  margin: 10px 0 0;
+}
+
+.ingredientsNameInput {
+  padding-right: 20px;
+  flex: 1;
 }
 
 .ingredientsNameInput,
@@ -55,14 +71,27 @@
 .ingredientAdd {
   cursor: pointer;
   text-align: left;
-  margin-bottom: 30px;
-  padding-left: 230px;
-  text-decoration: underline;
+  padding-left: 200px;
+  margin-bottom: 20px;
 }
 
 .ingredientsAdded {
-  padding-left: 230px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-left: 200px;
   text-align: left;
+  margin-bottom: 30px;
+}
+
+.fileInput {
+  margin-bottom: 60px;
+}
+
+.button {
+  margin-left: 200px;
+  font-size: 18px;
+  align-self: flex-start;
 }
 
 .ingredientsAddedItemTitle {
@@ -71,32 +100,51 @@
   overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;
-  margin-right: 4px;
-}
-
-.fileInput {
-  margin-bottom: 72px;
-}
-
-.button {
-  font-size: 18px;
 }
 
 .ingredientsAddedItem {
-  margin-bottom: 20px;
+  margin-bottom: 8px;
   display: flex;
   align-items: center;
+  padding: 5px 16px;
+  width: fit-content;
+  border: 1px solid #a0a0a0;
+  border-radius: 30px;
 }
 
 .ingredientsAddedItemRemove {
-  padding-left: 20px;
-  color: red;
   cursor: pointer;
+  margin-left: 14px;
+}
+
+.mb36 {
+  margin-bottom: 36px;
+}
+
+.error {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 130%;
+  color: #ff3b30;
+  margin-top: 8px;
+  margin-left: 200px;
+  text-align: left;
+}
+
+.errorIngredient {
+  padding-left: 200px;
+  text-align: left;
+}
+
+.checkboxGroup {
+  margin-bottom: 36px;
 }
 
 @media screen and (max-width: 820px) {
   .ingredientsInputs {
-    display: block;
+    flex-direction: column;
+    align-items: flex-start;
     text-align: left;
   }
 
@@ -112,20 +160,55 @@
     margin-bottom: 10px;
   }
 
-  .checkboxGroupTags {
-    display: block;
-  }
-
-  .checkboxGroupItem {
-    margin-bottom: 6px;
-  }
-
   .cookingTime {
-    display: block;
     text-align: left;
+  }
+
+  .cookingTimeUnit {
+    position: relative;
+    left: -155px;
+    align-self: end;
+    margin-bottom: 28px;
   }
 
   .ingredientsAdded {
     padding-left: 0px;
+  }
+
+  .ingredientsAmountInputContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .amountText {
+    margin: 0 0 8px;
+  }
+
+  .measurementUnit {
+    align-self: flex-start;
+    margin-left: 0;
+  }
+
+  .button {
+    margin-left: 0;
+  }
+
+  .error {
+    margin-left: 0;
+  }
+
+  .ingredientsNameInput {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 730px) {
+  .button {
+    width: 100%;
+  }
+
+  .error {
+    text-align: center;
   }
 }

@@ -2,13 +2,12 @@ import styles from './styles.module.css'
 import cn from 'classnames'
 import { Tag } from '../index'
 
-const TagsContainer = ({ tags }) => {
+const TagsContainer = ({ tags, className }) => {
   if (!tags) { return null }
-  return <div className={styles['tags-container']}>
+  return <div className={cn(styles['tags-container'], className)}>
     {tags.map(tag => {
       return <Tag
         key={tag.id}
-        color={tag.color}
         name={tag.name}
       />
     })}

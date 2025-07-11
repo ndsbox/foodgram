@@ -197,7 +197,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RecipeCreateUpdate'
+              $ref: '#/components/schemas/RecipeCreate'
       responses:
         '201':
           content:
@@ -276,7 +276,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RecipeCreateUpdate'
+              $ref: '#/components/schemas/RecipeUpdate'
       responses:
         '200':
           content:
@@ -318,6 +318,27 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Рецепты
+  /api/recipes/{id}/get-link/:
+    get:
+      operationId: Получить короткую ссылку на рецепт
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "Уникальный идентификатор рецепта."
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeGetShortLink'
+          description: 'Ссылка на рецепт'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Рецепты
   /api/recipes/{id}/favorite/:
     post:
       operationId: Добавить рецепт в избранное
@@ -340,12 +361,10 @@ paths:
           description: 'Рецепт успешно добавлен в избранное'
         '400':
           description: 'Ошибка добавления в избранное (Например, когда рецепт уже есть в избранном)'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SelfMadeError'
         '401':
           $ref: '#/components/responses/AuthenticationError'
+        '404':
+          $ref: '#/components/responses/RecipeNotFound'
 
       tags:
         - Избранное
@@ -366,12 +385,10 @@ paths:
           description: 'Рецепт успешно удален из избранного'
         '400':
           description: 'Ошибка удаления из избранного (Например, когда рецепта там не было)'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SelfMadeError'
         '401':
           $ref: '#/components/responses/AuthenticationError'
+        '404':
+          $ref: '#/components/responses/RecipeNotFound'
       tags:
         - Избранное
   /api/recipes/{id}/shopping_cart/:
@@ -396,12 +413,10 @@ paths:
           description: 'Рецепт успешно добавлен в список покупок'
         '400':
           description: 'Ошибка добавления в список покупок (Например, когда рецепт уже есть в списке покупок)'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SelfMadeError'
         '401':
           $ref: '#/components/responses/AuthenticationError'
+        '404':
+          $ref: '#/components/responses/RecipeNotFound'
       tags:
         - Список покупок
     delete:
@@ -421,12 +436,10 @@ paths:
           description: 'Рецепт успешно удален из списка покупок'
         '400':
           description: 'Ошибка удаления из списка покупок (Например, когда рецепта там не было)'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SelfMadeError'
         '401':
           $ref: '#/components/responses/AuthenticationError'
+        '404':
+          $ref: '#/components/responses/RecipeNotFound'
       tags:
         - Список покупок
   /api/users/{id}/:
@@ -457,7 +470,7 @@ paths:
       description: ''
       parameters: []
       security:
-        - Token: [ ]
+        - Token: []
       responses:
         '200':
           content:
@@ -469,10 +482,50 @@ paths:
           $ref: '#/components/responses/AuthenticationError'
       tags:
         - Пользователи
+  /api/users/me/avatar/:
+    put:
+      operationId: Добавление аватара
+      description: Добавление аватара текущего пользователя
+      parameters: []
+      security:
+        - Token: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetAvatar'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetAvatarResponse'
+          description: 'Аватар успешно добавлен'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/AuthenticationError'
+      tags:
+        - Пользователи
+    delete:
+      operationId: Удаление аватара
+      description: Удаление аватара текущего пользователя
+      parameters: []
+      security:
+        - Token: []
+      responses:
+        '204':
+          description: Аватар успешно удален
+        '401':
+          $ref: '#/components/responses/AuthenticationError'
+      tags:
+        - Пользователи
   /api/users/subscriptions/:
     get:
       operationId: Мои подписки
       description: 'Возвращает пользователей, на которых подписан текущий пользователь. В выдачу добавляются рецепты.'
+      security:
+        - Token: []
       parameters:
         - name: page
           required: false
@@ -530,7 +583,7 @@ paths:
       operationId: Подписаться на пользователя
       description: 'Доступно только авторизованным пользователям'
       security:
-        - Token: [ ]
+        - Token: []
       parameters:
         - name: id
           in: path
@@ -553,21 +606,17 @@ paths:
           description: 'Подписка успешно создана'
         '400':
           description: 'Ошибка подписки (Например, если уже подписан или при подписке на себя самого)'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SelfMadeError'
         '401':
           $ref: '#/components/responses/AuthenticationError'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/UserNotFound'
       tags:
         - Подписки
     delete:
       operationId: Отписаться от пользователя
       description: 'Доступно только авторизованным пользователям'
       security:
-        - Token: [ ]
+        - Token: []
       parameters:
         - name: id
           in: path
@@ -580,14 +629,10 @@ paths:
           description: 'Успешная отписка'
         '400':
           description: 'Ошибка отписки (Например, если не был подписан)'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SelfMadeError'
         '401':
           $ref: '#/components/responses/AuthenticationError'
         '404':
-          $ref: '#/components/responses/NotFound'
+          $ref: '#/components/responses/UserNotFound'
 
       tags:
         - Подписки
@@ -638,6 +683,8 @@ paths:
       operationId: Изменение пароля
       description: 'Изменение пароля текущего пользователя'
       parameters: []
+      security:
+        - Token: []
       requestBody:
         content:
           application/json:
@@ -663,7 +710,7 @@ paths:
             schema:
               $ref: '#/components/schemas/TokenCreate'
       responses:
-        '201':
+        '200':
           content:
             application/json:
               schema:
@@ -676,6 +723,8 @@ paths:
       operationId: Удаление токена
       description: Удаляет токен текущего пользователя
       parameters: []
+      security:
+        - Token: []
       requestBody:
         content:
           application/json:
@@ -719,12 +768,17 @@ components:
           type: string
           maxLength: 150
           description: "Фамилия"
-          example: "Пупкин"
+          example: "Иванов"
         is_subscribed:
           type: boolean
           readOnly: true
           description: "Подписан ли текущий пользователь на этого"
           example: false
+        avatar:
+          type: string
+          format: uri
+          description: 'Ссылка на аватар'
+          example: 'http://foodgram.example.org/media/users/image.png'
       required:
         - username
     UserWithRecipes:
@@ -753,7 +807,7 @@ components:
           type: string
           maxLength: 150
           description: "Фамилия"
-          example: "Пупкин"
+          example: "Иванов"
         is_subscribed:
           type: boolean
           readOnly: true
@@ -765,6 +819,30 @@ components:
         recipes_count:
           type: integer
           description: 'Общее количество рецептов пользователя'
+        avatar:
+          type: string
+          format: uri
+          description: 'Ссылка на аватар'
+          example: 'http://foodgram.example.org/media/users/image.png'
+    SetAvatar:
+      description: 'Добавление аватара пользователя'
+      type: object
+      properties:
+        avatar:
+          description: 'Картинка, закодированная в Base64'
+          example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=='
+          type: string
+          format: binary
+      required:
+        - avatar
+    SetAvatarResponse:
+      type: object
+      properties:
+        avatar:
+          type: string
+          format: uri
+          description: 'Ссылка на аватар'
+          example: 'http://foodgram.example.org/media/users/image.png'
 
     Tag:
       type: object
@@ -774,19 +852,13 @@ components:
           readOnly: true
         name:
           type: string
-          maxLength: 200
-          description: 'Название'
+          maxLength: 32
+          description: 'Уникальное название'
           example: 'Завтрак'
-        color:
-          type: string
-          nullable: true
-          maxLength: 7
-          description: 'Цвет в HEX'
-          example: '#E26C2D'
         slug:
           type: string
           nullable: true
-          maxLength: 200
+          maxLength: 32
           pattern: ^[-a-zA-Z0-9_]+$
           description: 'Уникальный слаг'
           example: 'breakfast'
@@ -799,47 +871,47 @@ components:
           description: 'Уникальный id'
         tags:
           description: 'Список тегов'
+          readOnly: true
           type: array
           items:
             $ref: '#/components/schemas/Tag'
         author:
+          readOnly: true
           $ref: '#/components/schemas/User'
         ingredients:
+          readOnly: true
           description: 'Список ингредиентов'
           type: array
           items:
             $ref: '#/components/schemas/IngredientInRecipe'
         is_favorited:
+          readOnly: true
           type: boolean
           description: 'Находится ли в избранном'
         is_in_shopping_cart:
+          readOnly: true
           type: boolean
           description: 'Находится ли в корзине'
         name:
+          readOnly: true
           type: string
-          maxLength: 200
+          maxLength: 256
           description: 'Название'
         image:
+          readOnly: true
           description: 'Ссылка на картинку на сайте'
-          example: 'http://foodgram.example.org/media/recipes/images/image.jpeg'
+          example: 'http://foodgram.example.org/media/recipes/images/image.png'
           type: string
-          format: url
+          format: uri
         text:
+          readOnly: true
           description: 'Описание'
           type: string
         cooking_time:
+          readOnly: true
           description: 'Время приготовления (в минутах)'
           type: integer
           minimum: 1
-      required:
-        - tags
-        - author
-        - is_favorited
-        - is_in_shopping_cart
-        - name
-        - image
-        - text
-        - cooking_time
     RecipeMinified:
       type: object
       properties:
@@ -849,17 +921,25 @@ components:
           description: 'Уникальный id'
         name:
           type: string
-          maxLength: 200
+          maxLength: 256
           description: 'Название'
         image:
           description: 'Ссылка на картинку на сайте'
-          example: 'http://foodgram.example.org/media/recipes/images/image.jpeg'
+          example: 'http://foodgram.example.org/media/recipes/images/image.png'
           type: string
-          format: url
+          format: uri
         cooking_time:
           description: 'Время приготовления (в минутах)'
           type: integer
           minimum: 1
+    RecipeGetShortLink:
+      type: object
+      properties:
+        short-link:
+          type: string
+          description: 'Сокращенная ссылка'
+          format: uri
+          example: 'https://foodgram.example.org/s/3d0'
     Ingredient:
       type: object
       properties:
@@ -868,11 +948,11 @@ components:
           readOnly: true
         name:
           type: string
-          maxLength: 200
+          maxLength: 128
           example: 'Капуста'
         measurement_unit:
           type: string
-          maxLength: 200
+          maxLength: 64
           example: 'кг'
       required:
         - name
@@ -885,12 +965,12 @@ components:
           readOnly: true
         name:
           type: string
-          maxLength: 200
+          maxLength: 128
           description: 'Название'
           example: 'Картофель отварной'
         measurement_unit:
           type: string
-          maxLength: 200
+          maxLength: 64
           description: 'Единицы измерения'
           example: 'г'
         amount:
@@ -928,10 +1008,9 @@ components:
           type: string
           maxLength: 150
           description: "Фамилия"
-          example: "Пупкин"
+          example: "Иванов"
         password:
           type: string
-          maxLength: 150
           description: "Пароль"
           example: "Qwerty123"
       required:
@@ -967,7 +1046,7 @@ components:
           type: string
           maxLength: 150
           description: "Фамилия"
-          example: "Пупкин"
+          example: "Иванов"
       required:
         - username
         - first_name
@@ -1039,12 +1118,15 @@ components:
           type: string
         email:
           type: string
+      required:
+        - password
+        - email
     TokenGetResponse:
       type: object
       properties:
         auth_token:
           type: string
-    RecipeCreateUpdate:
+    RecipeCreate:
       type: object
       properties:
         id:
@@ -1082,7 +1164,7 @@ components:
         name:
           description: 'Название'
           type: string
-          maxLength: 200
+          maxLength: 256
         text:
           description: 'Описание'
           type: string
@@ -1094,6 +1176,58 @@ components:
         - ingredients
         - tags
         - image
+        - name
+        - text
+        - cooking_time
+    RecipeUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        ingredients:
+          description: Список ингредиентов
+          type: array
+          items:
+            example:
+              id: 1123
+              amount: 10
+            type: object
+            properties:
+              id:
+                description: 'Уникальный id'
+                type: integer
+              amount:
+                description: 'Количество в рецепте'
+                type: integer
+            required:
+              - id
+              - amount
+        tags:
+          description: 'Список id тегов'
+          type: array
+          example: [1, 2]
+          items:
+            type: integer
+        image:
+          description: 'Картинка, закодированная в Base64'
+          example: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg=='
+          type: string
+          format: binary
+        name:
+          description: 'Название'
+          type: string
+          maxLength: 256
+        text:
+          description: 'Описание'
+          type: string
+        cooking_time:
+          description: 'Время приготовления (в минутах)'
+          type: integer
+          minimum: 1
+      required:
+        - ingredients
+        - tags
         - name
         - text
         - cooking_time
@@ -1123,14 +1257,6 @@ components:
                 type: array
                 items:
                   type: string
-
-    SelfMadeError:
-      description: Ошибка
-      type: object
-      properties:
-        errors:
-          description: 'Описание ошибки'
-          type: string
 
     AuthenticationError:
       description: Пользователь не авторизован
@@ -1190,6 +1316,20 @@ components:
 
     NotFound:
       description: Объект не найден
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+
+    RecipeNotFound:
+      description: 'Рецепт не найден'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
+
+    UserNotFound:
+      description: 'Пользователь не найден'
       content:
         application/json:
           schema:

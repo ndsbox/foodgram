@@ -7,7 +7,7 @@ export default function useRecipes () {
   const [ subscriptionsPage, setSubscriptionsPage ] = useState(1)
   const [ subscriptionsCount, setSubscriptionsCount ] = useState(0)
 
-  const removeSubscription = ({ id }) => {
+  const removeSubscription = ({ id, callback }) => {
     api
       .deleteSubscriptions({ author_id: id })
       .then(res => {
@@ -16,6 +16,7 @@ export default function useRecipes () {
         })
         setSubscriptions(subscriptionsUpdated)
         setSubscriptionsCount(subscriptionsCount - 1)
+        callback && callback()
       })
       .catch(err => {
         const { errors } = err

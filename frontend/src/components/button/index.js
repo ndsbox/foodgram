@@ -1,35 +1,38 @@
-import cn from 'classnames'
-import styles from './style.module.css'
+import cn from "classnames";
+import styles from "./style.module.css";
 
 const Button = ({
   children,
-  modifier = 'style_light-blue',
+  modifier = "style_light",
   href,
   clickHandler,
   className,
   disabled,
-  type = 'button'
+  type,
+  ...rest
 }) => {
   const classNames = cn(styles.button, className, {
     [styles[`button_${modifier}`]]: modifier,
-    [styles.button_disabled]: disabled
-  })
+    [styles.button_disabled]: disabled,
+  });
   if (href) {
-    return <a
+    return (
+      <a className={classNames} href={href}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <button
+      type={type || "button"}
       className={classNames}
-      href={href}
+      disabled={disabled}
+      onClick={(_) => clickHandler && clickHandler()}
+      {...rest}
     >
       {children}
-    </a>
-  }
-  return <button
-    className={classNames}
-    disabled={disabled}
-    onClick={_ => clickHandler && clickHandler()}
-  >
-    {children}
-  </button>
-}
+    </button>
+  );
+};
 
-
-export default Button
+export default Button;

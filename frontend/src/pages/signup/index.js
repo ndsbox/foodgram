@@ -1,71 +1,97 @@
-import { Container, Input, Title, Main, Form, Button } from '../../components'
-import styles from './styles.module.css'
-import { useFormWithValidation } from '../../utils'
-import { Redirect } from 'react-router-dom'
-import { useContext } from 'react'
-import { AuthContext } from '../../contexts'
-import MetaTags from 'react-meta-tags'
+import {
+  Container,
+  Input,
+  FormTitle,
+  Main,
+  Form,
+  Button,
+} from "../../components";
+import styles from "./styles.module.css";
+import { useFormWithValidation } from "../../utils";
+import { Redirect } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts";
+import MetaTags from "react-meta-tags";
 
-const SignUp = ({ onSignUp }) => {
-  const { values, handleChange, errors, isValid, resetForm } = useFormWithValidation()
-  const authContext = useContext(AuthContext)
+const SignUp = ({ onSignUp, submitError, setSubmitError }) => {
+  const { values, handleChange, errors } = useFormWithValidation();
+  const authContext = useContext(AuthContext);
 
-  return <Main>
-    {authContext && <Redirect to='/recipes' />}
-    <Container>
-      <MetaTags>
-        <title>Регистрация</title>
-        <meta name="description" content="Продуктовый помощник - Регистрация" />
-        <meta property="og:title" content="Регистрация" />
-      </MetaTags>
-      <Title title='Регистрация' />
-      <Form className={styles.form} onSubmit={e => {
-        e.preventDefault()
-        onSignUp(values)
-      }}>
-        <Input
-          label='Имя'
-          name='first_name'
-          required
-          onChange={handleChange}
-        />
-        <Input
-          label='Фамилия'
-          name='last_name'
-          required
-          onChange={handleChange}
-        />
-        <Input
-          label='Имя пользователя'
-          name='username'
-          required
-          onChange={handleChange}
-        />
+  const onChange = (e) => {
+    setSubmitError({ submitError: "" });
+    handleChange(e);
+  };
 
-        <Input
-          label='Адрес электронной почты'
-          name='email'
-          required
-          onChange={handleChange}
-        />
-        <Input
-          label='Пароль'
-          type='password'
-          name='password'
-          required
-          onChange={handleChange}
-        />
-        <Button
-          modifier='style_dark-blue'
-          type='submit'
-          className={styles.button}
-          disabled={!isValid}
+  return (
+    <Main withBG asFlex>
+      {authContext && <Redirect to="/recipes" />}
+      <Container className={styles.center}>
+        <MetaTags>
+          <title>Регистрация</title>
+          <meta
+            name="description"
+            content="Фудграм - Регистрация"
+          />
+          <meta property="og:title" content="Регистрация" />
+        </MetaTags>
+        <Form
+          className={styles.form}
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSignUp(values);
+          }}
         >
-          Создать аккаунт
-        </Button>
-      </Form>
-    </Container>
-  </Main>
-}
+          <FormTitle>Регистрация</FormTitle>
+          <Input
+            placeholder="Имя"
+            name="first_name"
+            required
+            isAuth={true}
+            error={errors}
+            onChange={onChange}
+          />
+          <Input
+            placeholder="Фамилия"
+            name="last_name"
+            required
+            isAuth={true}
+            error={errors}
+            onChange={onChange}
+          />
+          <Input
+            placeholder="Имя пользователя"
+            name="username"
+            required
+            isAuth={true}
+            error={errors}
+            onChange={onChange}
+          />
 
-export default SignUp
+          <Input
+            placeholder="Адрес электронной почты"
+            name="email"
+            required
+            isAuth={true}
+            error={errors}
+            onChange={onChange}
+          />
+          <Input
+            placeholder="Пароль"
+            type="password"
+            name="password"
+            required
+            isAuth={true}
+            error={errors}
+            submitError={submitError}
+            onChange={onChange}
+          />
+          <Button modifier="style_dark" type="submit" className={styles.button}>
+            Создать аккаунт
+          </Button>
+        </Form>
+      </Container>
+    </Main>
+  );
+};
+
+export default SignUp;

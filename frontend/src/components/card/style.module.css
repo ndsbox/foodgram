@@ -1,88 +1,145 @@
 .card {
-  display: flex;
-  flex-direction: column;
   max-width: 363px;
-  border: 1px solid #EEEEEE;
   box-sizing: border-box;
-  border-radius: 8px;
+  border-radius: 20px;
+  background: #fff;
+  position: relative;
   overflow: hidden;
   text-align: left;
+  min-height: 493px;
+  box-shadow: 0px 15px 45px rgba(107, 106, 131, 0.15);
 }
 
 .card__add {
   display: flex;
-  font-size: 14px!important;
-  font-weight: 600!important;
+  height: 44px;
+  line-height: 44px;
   align-items: center;
+}
+
+.card__save-button {
+  height: auto !important;
+  line-height: 1 !important;
+}
+
+.card__save-button:hover path {
+  fill: #000;
+}
+
+.card__save-button.card__save-button_active path {
+  fill: #000;
 }
 
 .card__add svg {
   margin-right: 5px;
 }
 
+.card__add svg path {
+  stroke: #000;
+}
+
+.card__add:hover svg path {
+  stroke: #fff;
+}
+
 .card__body {
-  padding: 24px 24px 12px;
-  flex: 1 0 auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 30px 24px;
+  background: #fff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
 .card__link {
   color: #000;
+  padding-right: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.card__footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 24px 32px;
-    flex: 0 0 auto;
+.card__controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 0 0 auto;
 }
 
 .card__item {
-    margin-right: 8px;
+  margin-right: 8px;
 }
+
 .card__text {
-    font-family: 'Montserrat', sans-serif;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 17px;
-    color: #000;
-    margin: 0 0 15px;
-    padding: 0;
+  font-family: "SF Pro Display", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000;
+  margin: 0 0 15px;
+  padding: 0;
 }
+
 .card__text:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .card__image {
-  height: 240px;
+  height: 279px;
   width: 100%;
   background-position: center;
   background-size: cover;
+  min-height: 214px;
 }
 
 .card__title {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "SF Pro Display", sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 20px;
-  line-height: 24px;
-  color: #000000;
-  margin: 0 0 12px;
+  font-size: 24px;
+  line-height: 120%;
+  color: #000;
+  margin: 0;
   padding: 0;
   display: block;
+  margin: 0 0 24px;
   text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.3s;
 }
 
-.card__time,
+.card__time {
+  font-size: 14px;
+  padding-left: 18px;
+}
+
 .card__author {
   display: flex;
   align-items: center;
   font-size: 14px;
+  border-right: 2px solid #a0a0a0;
+}
+
+.card__data {
+  display: grid;
+  grid-template-columns: 48px 108px 1fr;
+  align-items: center;
+  margin-bottom: 36px;
+}
+
+.card__tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  text-transform: capitalize;
+  z-index: 2;
 }
 
 .card__time {
-  margin-bottom: 15px;
 }
 
 .card__time svg,
@@ -90,18 +147,31 @@
   margin-right: 10px;
 }
 
+.card__author-image {
+  min-width: 36px;
+  max-width: 36px;
+  height: 36px;
+  border-radius: 100%;
+  margin-right: 12px;
+  background-image: url("../../images/userpic-icon.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 
-@media screen and (max-width: 1000px) {
-  .card__image {
-    height: 160px;
+@media screen and (max-width: 1040px) {
+  .card {
+    max-width: 100%;
   }
+}
 
+@media screen and (max-width: 830px) {
   .card__body {
-    padding: 12px;
+    padding: 24px 14px 12px;
+    min-height: 200px;
   }
 
-  .card__footer {
-    padding: 12px;
+  .card {
+    min-height: 400px;
   }
 }
 
@@ -110,4 +180,3 @@
     max-width: 100%;
   }
 }
-

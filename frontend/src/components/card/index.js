@@ -1,10 +1,13 @@
-import styles from './style.module.css'
-import { LinkComponent, Icons, Button, TagsContainer } from '../index'
-import { useState, useContext } from 'react'
-import { AuthContext } from '../../contexts'
+import styles from "./style.module.css";
+import { Tooltip } from "react-tooltip";
+import { LinkComponent, Icons, Button, TagsContainer, Popup } from "../index";
+import { AuthContext } from "../../contexts";
+import { useContext, useState } from "react";
+import cn from "classnames";
+import DefaultImage from "../../images/userpic-icon.jpg";
 
 const Card = ({
-  name = 'Без названия',
+  name = "Без названия",
   id,
   image,
   is_favorited,
@@ -14,60 +17,118 @@ const Card = ({
   author = {},
   handleLike,
   handleAddToCart,
-  updateOrders
+  updateOrders,
 }) => {
-  const authContext = useContext(AuthContext)
-  return <div className={styles.card}>
+  const authContext = useContext(AuthContext);
+  const [toLogin, setToLogin] = useState(false);
+  const [whiteSpaceValue, setWhiteSpaceValue] = useState("nowrap");
+
+  return (
+    <div className={styles.card}>
+      {toLogin && (
+        <Popup
+          title={
+            <>
+              <LinkComponent href="/signin" title="Войдите" /> или{" "}
+              <LinkComponent href="/signup" title="зарегистрируйтесь" />, чтобы
+              сохранить рецепт
+            </>
+          }
+          onClose={() => {
+            setToLogin(false);
+          }}
+        />
+      )}
+      <TagsContainer tags={tags} className={styles.card__tag} />
+
       <LinkComponent
-        className={styles.card__title}
         href={`/recipes/${id}`}
-        title={<div className={styles.card__image} style={{ backgroundImage: `url(${ image })` }} />}
+        title={
+          <div
+            className={styles.card__image}
+            style={{ backgroundImage: `url(${image})` }}
+          />
+        }
       />
       <div className={styles.card__body}>
         <LinkComponent
           className={styles.card__title}
           href={`/recipes/${id}`}
           title={name}
+          style={{ whiteSpace: whiteSpaceValue }}
+          onMouseEnter={() => {
+            setWhiteSpaceValue("normal");
+          }}
+          onMouseLeave={() => {
+            setWhiteSpaceValue("nowrap");
+          }}
         />
-        <TagsContainer tags={tags} />
-        <div className={styles.card__time}>
-          <Icons.ClockIcon /> {cooking_time} мин.
-        </div>
-        <div className={styles.card__author}>
-          <Icons.UserIcon /> <LinkComponent
-            href={`/user/${author.id}`}
-            title={`${author.first_name} ${author.last_name}`}
-            className={styles.card__link}
+        <div className={styles.card__data}>
+          <div
+            className={styles["card__author-image"]}
+            style={{
+              "background-image": `url(${author.avatar || DefaultImage})`,
+            }}
           />
+          <div className={styles.card__author}>
+            <LinkComponent
+              href={`/user/${author.id}`}
+              title={`${author.first_name} ${author.last_name}`}
+              className={styles.card__link}
+            />
+          </div>
+          <div className={styles.card__time}>{cooking_time} мин.</div>
         </div>
-      </div>
-      
-      <div className={styles.card__footer}>
-          {authContext && <Button
+        <div className={styles.card__controls}>
+          <Button
             className={styles.card__add}
-            modifier={is_in_shopping_cart ? 'style_light' : 'style_light-blue'}
-            clickHandler={_ => {
+            clickHandler={(_) => {
+              if (!authContext) {
+                return setToLogin(true);
+              }
               handleAddToCart({
                 id,
                 toAdd: Number(!is_in_shopping_cart),
-                callback: updateOrders
-              })
-            }}
-            disabled={!authContext}
-          >
-            {is_in_shopping_cart ? <><Icons.DoneIcon />Рецепт добавлен</> : <><Icons.PlusIcon fill='#4A61DD' /> Добавить в покупки</>}
-          </Button>}
-          
-          {authContext && <Button
-            modifier='style_none'
-            clickHandler={_ => {
-              handleLike({ id, toLike: Number(!is_favorited) })
+                callback: updateOrders,
+              });
             }}
           >
-            {is_favorited ? <Icons.StarActiveIcon /> : <Icons.StarIcon />}
-          </Button>}
-      </div>
-  </div>
-}
+            {is_in_shopping_cart ? (
+              <>
+                <Icons.CheckIcon />
+                Рецепт добавлен
+              </>
+            ) : (
+              <>
+                <Icons.PlusIcon /> Добавить в покупки
+              </>
+            )}
+          </Button>
 
-export default Card
+          <Button
+            modifier="style_none"
+            clickHandler={(_) => {
+              if (!authContext) {
+                return setToLogin(true);
+              }
+              handleLike({ id, toLike: Number(!is_favorited) });
+            }}
+            className={cn(styles["card__save-button"], {
+              [styles["card__save-button_active"]]: is_favorited,
+            })}
+            data-tooltip-id={id}
+            data-tooltip-content={
+              is_favorited ? "Удалить из избранного" : "Добавить в избранное"
+            }
+            data-tooltip-place="bottom"
+          >
+            <Icons.LikeIcon />
+          </Button>
+          <Tooltip id={id.toString()} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Card;
