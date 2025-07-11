@@ -23,7 +23,7 @@ jobs:
         pip install flake8==6.0.0
     - name: Test with flake8
       run: python -m flake8 backend/
-      
+
   build_backend_and_push_to_docker_hub:
     name: Push backend Docker image to DockerHub
     runs-on: ubuntu-latest
@@ -128,4 +128,4 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: Деплой Foodgram успешно выполнен! Ссылка на коммит - https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+        message: Деплой проекта Foodgram успешно выполнен! Ссылка на коммит - https://github.com/${{ github.repository }}/commit/${{ github.sha }}
