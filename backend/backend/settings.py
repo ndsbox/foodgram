@@ -20,7 +20,6 @@ DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 # DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-AUTH_USER_MODEL = 'users.User'
 
 CSRF_TRUSTED_ORIGINS = ['https://algoritm.zapto.org']
 
