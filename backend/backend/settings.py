@@ -21,7 +21,7 @@ DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = ['*']
 
-AUTH_USER_MODEL = 'auth.User'
+AUTH_USER_MODEL = 'users.User'
 
 CSRF_TRUSTED_ORIGINS = ['https://ndsboxfoodgram.ddns.net']
 
